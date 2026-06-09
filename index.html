@@ -1,0 +1,52 @@
+const currentSentence = "국내산 쌀 증류주원액 100% 함유";
+
+let timeLeft = 10;
+let started = false;
+let finished = false;
+let countdown = null;
+
+const timer = document.getElementById("timer");
+const input = document.getElementById("typingBox");
+const result = document.getElementById("result");
+const resultTitle = document.getElementById("resultTitle");
+const resultText = document.getElementById("resultText");
+
+function startTimer() {
+  countdown = setInterval(function() {
+    timeLeft--;
+    timer.innerText = timeLeft + "초";
+
+    if (timeLeft <= 0 && !finished) {
+      finished = true;
+      clearInterval(countdown);
+      input.disabled = true;
+
+      resultTitle.innerText = "⏰ 시간 초과!";
+      resultText.innerText = "아쉽네요! 조금만 더 빠르게 도전해 보세요.";
+      result.className = "fail-bg";
+      result.style.display = "block";
+    }
+  }, 1000);
+}
+
+input.addEventListener("input", function() {
+  const userText = input.value.trim();
+
+  if (!started && userText.length > 0) {
+    started = true;
+    startTimer();
+  }
+
+  if (userText === currentSentence && !finished) {
+    finished = true;
+    clearInterval(countdown);
+    input.disabled = true;
+
+    resultTitle.innerText = "🎉 미션 성공!";
+    resultText.innerText =
+      "축하합니다! " + (10 - timeLeft) + "초 만에 완성하셨습니다.";
+
+    result.className = "success-bg";
+    result.style.display = "block";
+  }
+});
